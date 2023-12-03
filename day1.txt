@@ -1,0 +1,29 @@
+// Day 1:
+
+// This is a custom Power Query script
+// that returns a solution for Day 1 ihn Advent Of Code 2023
+
+let
+    CheckForNumbers = (x as text) =>
+    let
+        listOfChars = Text.ToList(x),
+        finalNumber = 
+            Number.FromText(
+                Number.ToText(List.First(List.RemoveNulls(List.Transform(listOfChars, each convertToNumberOrNull(_)))))&
+                Number.ToText(List.Last(List.RemoveNulls(List.Transform(listOfChars, each convertToNumberOrNull(_)))))
+            )
+    in 
+        finalNumber,
+
+    convertToNumberOrNull = (x as text) =>
+    let
+        result = try Number.FromText(x) otherwise null
+    in result,
+
+    Result = 
+        Table.AddColumn(
+            input,
+             "Numbers", each CheckForNumbers([Column1])),
+    CalculatedSum = "Day 1 - Part 1: Result: " & Number.ToText(List.Sum(Result[Numbers]))
+in
+    CalculatedSum
